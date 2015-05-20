@@ -427,8 +427,7 @@ Qed.
     in the proof of this one.)  You may find that [plus_swap] comes in
     handy. *)
 
-Lemma mult_comm_lemma : forall n m : nat,
-                          m + m * n = m * S n.
+Lemma sum_as_mult : forall n m : nat, m + m * n = m * S n.
 Proof.
   intros n m.
   induction m as [| m'].
@@ -442,8 +441,7 @@ Proof.
     reflexivity.
 Qed.
 
-Theorem mult_comm : forall m n : nat,
- m * n = n * m.
+Theorem mult_comm : forall m n : nat, m * n = n * m.
 Proof.
   intros n m.
   induction n as [| n'].
@@ -454,7 +452,7 @@ Proof.
   Case "n = S n'".
     simpl.
     rewrite -> IHn'.
-    rewrite -> mult_comm_lemma.
+    rewrite -> sum_as_mult.
     reflexivity.
 Qed.
     
@@ -551,7 +549,7 @@ Proof.
     reflexivity.
 Qed.
 
-Theorem S_nbeq_0 : forall n:nat,
+Theorem S_nbeq_0 : forall n : nat,
   beq_nat (S n) 0 = false.
 Proof.
   intros n.
@@ -559,7 +557,7 @@ Proof.
   reflexivity.
 Qed.
 
-Theorem mult_1_l : forall n:nat, 1 * n = n.
+Theorem mult_1_l : forall n : nat, 1 * n = n.
 Proof.
   intros n.
   simpl.
@@ -602,16 +600,16 @@ Proof.
     simpl.
     reflexivity.
   Case "p = S p'".
-    rewrite <- mult_comm_lemma.
+    rewrite <- sum_as_mult.
     rewrite -> IHp'.
-    rewrite -> plus_swap.
+    rewrite <- plus_swap.
     rewrite <- plus_assoc.
-    rewrite -> mult_comm_lemma.
+    rewrite -> sum_as_mult.
     rewrite -> plus_swap.
     rewrite -> plus_assoc.
-    rewrite -> mult_comm_lemma.
+    rewrite -> sum_as_mult.
     reflexivity.
-Qed.
+Qed.    
 
 Theorem mult_assoc : forall n m p : nat,
   n * (m * p) = (n * m) * p.
@@ -639,7 +637,15 @@ problem using the theorem no matter which way we state it. *)
 Theorem beq_nat_refl : forall n : nat, 
   true = beq_nat n n.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n.
+  induction n as [| n'].
+  Case "n = 0".
+    reflexivity.
+  Case "n = S n'".
+    simpl.
+    rewrite <- IHn'.
+    reflexivity.
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, optional (plus_swap')  *)
@@ -657,7 +663,15 @@ Proof.
 Theorem plus_swap' : forall n m p : nat, 
   n + (m + p) = m + (n + p).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n m p.
+  rewrite -> plus_comm.
+  rewrite <- plus_assoc.
+  replace (p + n) with (n + p).
+  reflexivity.
+  Case "Proof of replacement".
+  rewrite -> plus_comm.
+  reflexivity.
+Qed.
 (** [] *)
 
 
